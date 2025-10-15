@@ -1,0 +1,910 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>61 Años Liceo Francisco José de Caldas</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 50%, #7e22ce 100%);
+            min-height: 100vh;
+            overflow-x: hidden;
+            position: relative;
+        }
+
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: url('https://i.postimg.cc/x8wNWgsh/Marca-LE-Liceos-LFJC-Blanco.png');
+            background-size: 300px 300px;
+            background-repeat: repeat;
+            opacity: 0.05;
+            z-index: 0;
+            pointer-events: none;
+        }
+
+        /* Pantalla de inicio */
+        .intro-screen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100vh;
+            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 50%, #7e22ce 100%);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+            transition: opacity 0.8s ease, visibility 0.8s ease;
+        }
+
+        .intro-screen::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: url('https://i.postimg.cc/x8wNWgsh/Marca-LE-Liceos-LFJC-Blanco.png');
+            background-size: 300px 300px;
+            background-repeat: repeat;
+            opacity: 0.05;
+            z-index: -1;
+        }
+
+        .intro-screen.hidden {
+            opacity: 0;
+            visibility: hidden;
+        }
+
+        .logo-container {
+            position: relative;
+            margin-bottom: 40px;
+            animation: logoEntrance 1.5s ease-out;
+        }
+
+        .logo-wrapper {
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .logo-wrapper img {
+            width: 250px;
+            height: 250px;
+            object-fit: contain;
+            filter: drop-shadow(0 20px 40px rgba(0, 0, 0, 0.5));
+            z-index: 1;
+        }
+
+        .intro-text {
+            text-align: center;
+            color: white;
+            margin-bottom: 50px;
+            animation: fadeInUp 1s ease 0.5s backwards;
+        }
+
+        .intro-text h1 {
+            font-size: 3.5em;
+            font-weight: bold;
+            text-shadow: 3px 3px 10px rgba(0, 0, 0, 0.5);
+            margin-bottom: 15px;
+            letter-spacing: 2px;
+        }
+
+        .intro-text .highlight {
+            color: #ffd700;
+            font-size: 4em;
+            display: block;
+            margin: 10px 0;
+            text-shadow: 0 0 20px rgba(255, 215, 0, 0.8);
+        }
+
+        .intro-text p {
+            font-size: 1.5em;
+            opacity: 0.95;
+            margin-top: 10px;
+        }
+
+        .start-button {
+            padding: 20px 50px;
+            font-size: 1.4em;
+            font-weight: bold;
+            color: #1e3c72;
+            background: linear-gradient(135deg, #ffd700, #ffed4e);
+            border: none;
+            border-radius: 50px;
+            cursor: pointer;
+            box-shadow: 0 10px 30px rgba(255, 215, 0, 0.4);
+            transition: all 0.3s ease;
+            animation: fadeInUp 1s ease 1s backwards;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .start-button:hover {
+            transform: translateY(-5px) scale(1.05);
+            box-shadow: 0 15px 40px rgba(255, 215, 0, 0.6);
+            background: linear-gradient(135deg, #ffed4e, #ffd700);
+        }
+
+        .start-button:active {
+            transform: translateY(-2px) scale(1.02);
+        }
+
+        /* Animación de confeti */
+        .confetti {
+            position: fixed;
+            width: 10px;
+            height: 10px;
+            top: -10px;
+            z-index: 999;
+            animation: confetti-fall linear forwards;
+        }
+
+        @keyframes confetti-fall {
+            to {
+                transform: translateY(100vh) rotate(360deg);
+                opacity: 0;
+            }
+        }
+
+        @keyframes logoEntrance {
+            0% {
+                opacity: 0;
+                transform: scale(0.3) rotate(-180deg);
+            }
+            60% {
+                transform: scale(1.1) rotate(10deg);
+            }
+            100% {
+                opacity: 1;
+                transform: scale(1) rotate(0deg);
+            }
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Contenedor principal de la línea de tiempo */
+        .main-content {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 20px;
+            min-height: 100vh;
+            opacity: 0;
+            transition: opacity 0.8s ease;
+            position: relative;
+            z-index: 1;
+        }
+
+        .main-content.visible {
+            opacity: 1;
+        }
+
+        .timeline-wrapper {
+            position: relative;
+            width: 100%;
+            max-width: 1400px;
+            overflow: hidden;
+        }
+
+        .nav-button {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            background: rgba(255, 255, 255, 0.9);
+            border: none;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            color: #667eea;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+            z-index: 10;
+            transition: all 0.3s ease;
+        }
+
+        .nav-button:hover {
+            background: white;
+            transform: translateY(-50%) scale(1.1);
+            box-shadow: 0 6px 20px rgba(0,0,0,0.4);
+        }
+
+        .nav-button:active {
+            transform: translateY(-50%) scale(0.95);
+        }
+
+        .nav-button.disabled {
+            opacity: 0.3;
+            cursor: not-allowed;
+        }
+
+        .nav-button.disabled:hover {
+            transform: translateY(-50%) scale(1);
+        }
+
+        .nav-left {
+            left: 10px;
+        }
+
+        .nav-right {
+            right: 10px;
+        }
+
+        .header {
+            text-align: center;
+            color: white;
+            margin-bottom: 40px;
+            animation: fadeInDown 1s ease;
+        }
+
+        .header .logo-header {
+            width: 80px;
+            height: 80px;
+            margin-bottom: 15px;
+        }
+
+        .header h1 {
+            font-size: 2.5em;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+            margin-bottom: 10px;
+        }
+
+        .header p {
+            font-size: 1.2em;
+            opacity: 0.9;
+        }
+
+        .timeline-container {
+            display: flex;
+            gap: 30px;
+            justify-content: flex-start;
+            align-items: center;
+            perspective: 1000px;
+            padding: 20px;
+            transition: transform 0.5s ease;
+            will-change: transform;
+        }
+
+        .card-wrapper {
+            width: 320px;
+            height: 450px;
+            perspective: 1000px;
+            animation: fadeInUp 0.8s ease forwards;
+            opacity: 0;
+            flex-shrink: 0;
+        }
+
+        .card-wrapper:nth-child(1) { animation-delay: 0.1s; }
+        .card-wrapper:nth-child(2) { animation-delay: 0.2s; }
+        .card-wrapper:nth-child(3) { animation-delay: 0.3s; }
+        .card-wrapper:nth-child(4) { animation-delay: 0.4s; }
+        .card-wrapper:nth-child(5) { animation-delay: 0.5s; }
+        .card-wrapper:nth-child(6) { animation-delay: 0.6s; }
+
+        .card {
+            width: 100%;
+            height: 100%;
+            position: relative;
+            transform-style: preserve-3d;
+            transition: transform 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            cursor: pointer;
+        }
+
+        .card.flipped {
+            transform: rotateY(180deg);
+        }
+
+        .card-face {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            backface-visibility: hidden;
+            border-radius: 20px;
+            padding: 25px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.3);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .card-front {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+
+        .card-back {
+            background: white;
+            transform: rotateY(180deg);
+            overflow-y: auto;
+            justify-content: flex-start;
+            align-items: flex-start;
+        }
+
+        .card-front .year {
+            font-size: 3em;
+            font-weight: bold;
+            text-shadow: 3px 3px 6px rgba(0,0,0,0.3);
+            margin-bottom: 20px;
+        }
+
+        .card-front .icon {
+            font-size: 4em;
+            margin-bottom: 20px;
+            filter: drop-shadow(3px 3px 6px rgba(0,0,0,0.3));
+        }
+
+        .card-front .title {
+            font-size: 1.5em;
+            font-weight: bold;
+            text-align: center;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.2);
+        }
+
+        .card-back h3 {
+            color: #667eea;
+            font-size: 1.3em;
+            margin-bottom: 12px;
+            border-bottom: 3px solid #667eea;
+            padding-bottom: 8px;
+            width: 100%;
+        }
+
+        .card-back p {
+            color: #333;
+            line-height: 1.5;
+            font-size: 0.95em;
+            text-align: justify;
+        }
+
+        .card-back .highlight {
+            background: #f0f0f0;
+            padding: 8px;
+            border-radius: 8px;
+            margin-top: 10px;
+            font-size: 0.85em;
+            color: #555;
+        }
+
+        .tap-hint {
+            color: white;
+            text-align: center;
+            margin-top: 30px;
+            font-size: 1.1em;
+            opacity: 0.8;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes fadeInDown {
+            from {
+                opacity: 0;
+                transform: translateY(-30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes pulse {
+            0%, 100% {
+                opacity: 0.8;
+            }
+            50% {
+                opacity: 0.4;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .intro-text h1 {
+                font-size: 2em;
+            }
+
+            .intro-text .highlight {
+                font-size: 2.5em;
+            }
+
+            .logo-wrapper img {
+                width: 180px;
+                height: 180px;
+            }
+
+            .start-button {
+                padding: 15px 35px;
+                font-size: 1.1em;
+            }
+
+            .header h1 {
+                font-size: 1.8em;
+            }
+
+            .nav-button {
+                display: none;
+            }
+            
+            .timeline-container {
+                flex-direction: column;
+                align-items: center;
+                transform: none !important;
+            }
+
+            .card-wrapper {
+                width: 100%;
+                max-width: 320px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Pantalla de inicio -->
+    <div class="intro-screen" id="introScreen">
+        <!-- Canvas de fuegos artificiales (solo en la intro) -->
+        <canvas id="fireworksCanvas" class="fireworks-canvas"></canvas>
+
+        <div class="logo-container">
+            <div class="logo-wrapper">
+                <img src="http://caldas.liceosejercito.edu.co/images/equipo_lfjc/images/logo_efqm_2024_200_.png" 
+                     alt="Escudo Liceo Francisco José de Caldas">
+            </div>
+        </div>
+        
+        <div class="intro-text">
+            <h1>🎓 Liceo Francisco José de Caldas 🎓</h1>
+            <span class="highlight">61 AÑOS</span>
+            <p>de Excelencia y Compromiso</p>
+        </div>
+        
+        <button class="start-button" id="startButton">
+            🎉 Conoce Nuestro Camino 🎉
+        </button>
+    </div>
+
+    <!-- Contenido principal (línea de tiempo) -->
+    <div class="main-content" id="mainContent">
+        <div class="header">
+            <!--<img class="logo-header" src="http://caldas.liceosejercito.edu.co/images/equipo_lfjc/images/logo_efqm_2024_200_.png" 
+                 alt="Escudo Liceo Francisco José de Caldas">-->
+            <h1>🎓 61 Años de Excelencia 🎓</h1>
+            <p>Liceos del Ejército - Liceo Francisco José de Caldas</p>
+        </div>
+
+        <div class="timeline-wrapper">
+            <button class="nav-button nav-left" id="prevBtn" onclick="navigate(-1)">←</button>
+            <button class="nav-button nav-right" id="nextBtn" onclick="navigate(1)">→</button>
+            <div class="tap-hint">
+            👆 Toca las tarjetas para ver más información
+        </div>
+            <div class="timeline-container" id="timeline">
+                <!-- (tus tarjetas originales sin cambios) -->
+                <!-- Tarjeta 1 -->
+                <div class="card-wrapper">
+                    <div class="card" onclick="this.classList.toggle('flipped')">
+                        <div class="card-face card-front">
+                            <div class="year">1964</div>
+                            <div class="icon">🏫</div>
+                            <div class="title">Fundación del Liceo</div>
+                        </div>
+                        <div class="card-face card-back">
+                            <h3>📅 1964: Los Inicios</h3>
+                            <p>El 4 de octubre de 1964 nace el Liceo Francisco José de Caldas en la Guarnición Militar de Tolemaida, bajo la dirección de la Secretaría de Educación de Cundinamarca, con apoyo del Ministerio de Educación y Defensa.</p>
+                            <div class="highlight">
+                                ✨ Inicio como Concentración Escolar Militar
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Tarjeta 2 -->
+                <div class="card-wrapper">
+                    <div class="card" onclick="this.classList.toggle('flipped')">
+                        <div class="card-face card-front">
+                            <div class="year">1980-1989</div>
+                            <div class="icon">🏅</div>
+                            <div class="title">Consolidación</div>
+                        </div>
+                        <div class="card-face card-back">
+                            <h3>🏫 1980-1989: Identidad</h3>
+                            <p><strong>1980:</strong> Asesoría de los Liceos del Ejército y adopción del nombre actual.</p>
+                            <p><strong>1981:</strong> Autorización oficial de preescolar a séptimo grado.</p>
+                            <p><strong>1989:</strong> Recepción del Escudo de los Liceos del Ejército.</p>
+                            <div class="highlight">
+                                🛡️ Símbolo de honor y compromiso liceísta
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Tarjeta 3 -->
+<div class="card-wrapper">
+  <div class="card" onclick="this.classList.toggle('flipped')">
+    <div class="card-face card-front">
+      <div class="year">1993-2001</div>
+      <div class="icon">🎓</div>
+      <div class="title">Expansión</div>
+    </div>
+    <div class="card-face card-back">
+      <h3>🎓 1993-2001: Crecimiento</h3>
+      <p><strong>1993:</strong> Apertura del primer nivel de preescolar para niños de 4 años.</p>
+      <p><strong>2001:</strong> El 18 de octubre, el Ministerio de Educación otorga Licencia de Funcionamiento y Reconocimiento Oficial completo.</p>
+      <div class="highlight">
+        📋 DANE: 225488000057<br>
+        📋 ICFES: 076190
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Tarjeta 4 -->
+<div class="card-wrapper">
+  <div class="card" onclick="this.classList.toggle('flipped')">
+    <div class="card-face card-front">
+      <div class="year">2007-2016</div>
+      <div class="icon">🏆</div>
+      <div class="title">Sistema de gestión de Calidad EFQM</div>
+    </div>
+    <div class="card-face card-back">
+      <h3>🏅 2007-2016: Excelencia</h3>
+      <p><strong>2007:</strong> Inicio del proceso de Acreditación EFQM.</p>
+      <p><strong>2013:</strong> Finalización programa Instrucción Militar estudiantes 9,10 y 11.</p>
+      <p><strong>2013:</strong> Certificación "Comprometido con la Excelencia" (C2E).</p>
+      <p><strong>2013:</strong> Primer Puesto Olimpiadas de Computación Universidad antonio Nariño -Grado Noveno.</p>
+      <p><strong>2016:</strong> Certificación "Reconocido por la Excelencia" (R3E).</p>
+      <div class="highlight">
+        ⭐ Compromiso continuo con la calidad educativa
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Tarjeta 5 -->
+<div class="card-wrapper">
+  <div class="card" onclick="this.classList.toggle('flipped')">
+    <div class="card-face card-front">
+      <div class="year">1997-2018</div>
+      <div class="icon">📚</div>
+      <div class="title">Logros Académicos e Infraestructura</div>
+    </div>
+    <div class="card-face card-back">
+      <h3>📚 1997-2018: Logros Académicos e Infraestructura</h3>
+      <p><strong>1997:</strong> Primera promoción de bachilleres.</p>
+      <p><strong>1998:</strong> Distinción Andrés Bello para Estudiante Catalina Puentes.</p>
+      <p><strong>1999:</strong> Inicio de Olimpiadas Internas de Matemáticas LFJC.</p>
+      <p><strong>2015:</strong> Medalla de oro, Plata y Bronce Olimpiadas Nacionales de Química Universidad Nacional.</p>
+      <p><strong>2018:</strong> Construcción Polideportivo - ANASE.</p>
+      <div class="highlight">
+        🥈 2018: Segundo lugar Juegos Supérate
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Tarjeta 6 -->
+<div class="card-wrapper">
+  <div class="card" onclick="this.classList.toggle('flipped')">
+    <div class="card-face card-front">
+      <div class="year">2013-2023</div>
+      <div class="icon">⭐</div>
+      <div class="title">Certificaciones y Reconocimientos</div>
+    </div>
+    <div class="card-face card-back">
+      <h3>🌟 2013-2023: Proyección</h3>
+      <p><strong>2013-2015:</strong> Medallas en Química y participación internacional en Olimpiadas Iberoamericanas.</p>
+      <p><strong>2014:</strong> Reconocimiento los mejores en educación - Ministerio de Educación Nacional.</p>
+      <p><strong>2018:</strong> Certificación de Calidad y Ratificación "Reconocido por la Excelencia" (R3E).</p>
+      <p><strong>2021:</strong> Certificación de Calidad "Reconocido por EFQM" (4 estrellas).</p>
+      
+      <div class="highlight">
+        🎉 61 años de historia y excelencia
+      </div>
+    </div>
+  </div>
+</div>
+<!-- Tarjeta 7 -->
+<div class="card-wrapper">
+  <div class="card" onclick="this.classList.toggle('flipped')">
+    <div class="card-face card-front">
+      <div class="year">2024 - 2025</div>
+      <div class="icon">🚀</div>
+      <div class="title">Innovación y Metas</div>
+    </div>
+    <div class="card-face card-back">
+      <h3>🚀 2013-2024: Metas e Innovación</h3>
+      <p><strong>2024:</strong> Certificación de Calidad "Reconocido por EFQM" (5 estrellas)</p>
+      <p><strong>2024:</strong> Puntaje de excelencia en pruebas Saber 11 : 434/500 puntos - Estudiante Luis Felipe Mendivelso Moreno</p>
+
+      <div class="highlight">
+        🎉 61 años de historia y excelencia
+      </div>
+    </div>
+  </div>
+</div>
+
+            </div>
+        </div>
+
+        <div class="tap-hint">
+            👆 Toca las tarjetas para ver más información
+        </div>
+    </div>
+
+    <style>
+      /* (todo tu CSS original arriba sin cambios) */
+
+      /* Solo añadimos este estilo para el canvas de fuegos artificiales */
+      .fireworks-canvas{
+        position: fixed;
+        inset: 0;
+        z-index: 1001; /* por encima de la intro (1000) */
+        pointer-events: none; /* no bloquea clics */
+      }
+    </style>
+
+    <script>
+        // ======= (tu script original de confeti, botones y navegación SIN cambios) =======
+
+        // Sistema de confeti infinito
+        let confettiInterval;
+        
+        function createConfetti() {
+            const colors = ['#ffd700', '#ff6b6b', '#4ecdc4', '#45b7d1', '#96ceb4', '#ffeaa7', '#dfe6e9', '#ff7675'];
+            const confettiCount = 8;
+            
+            for (let i = 0; i < confettiCount; i++) {
+                setTimeout(() => {
+                    const confetti = document.createElement('div');
+                    confetti.className = 'confetti';
+                    confetti.style.left = Math.random() * 100 + '%';
+                    confetti.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
+                    confetti.style.animationDuration = (Math.random() * 3 + 2) + 's';
+                    confetti.style.width = (Math.random() * 10 + 5) + 'px';
+                    confetti.style.height = (Math.random() * 10 + 5) + 'px';
+                    confetti.style.borderRadius = Math.random() > 0.5 ? '50%' : '0';
+                    
+                    document.body.appendChild(confetti);
+                    
+                    setTimeout(() => confetti.remove(), 5000);
+                }, i * 30);
+            }
+        }
+
+        // Iniciar confeti infinito al cargar
+        window.addEventListener('load', () => {
+            createConfetti();
+            confettiInterval = setInterval(createConfetti, 400);
+        });
+
+        // Botón de inicio
+        document.getElementById('startButton').addEventListener('click', function() {
+            const introScreen = document.getElementById('introScreen');
+            const mainContent = document.getElementById('mainContent');
+            
+            // Detener el confeti infinito
+            clearInterval(confettiInterval);
+            
+            // Crear ráfaga final de confeti
+            for (let i = 0; i < 50; i++) {
+                setTimeout(() => {
+                    const colors = ['#ffd700', '#ff6b6b', '#4ecdc4', '#45b7d1', '#96ceb4', '#ffeaa7', '#dfe6e9', '#ff7675'];
+                    const confetti = document.createElement('div');
+                    confetti.className = 'confetti';
+                    confetti.style.left = Math.random() * 100 + '%';
+                    confetti.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
+                    confetti.style.animationDuration = (Math.random() * 3 + 2) + 's';
+                    confetti.style.width = (Math.random() * 10 + 5) + 'px';
+                    confetti.style.height = (Math.random() * 10 + 5) + 'px';
+                    confetti.style.borderRadius = Math.random() > 0.5 ? '50%' : '0';
+                    document.body.appendChild(confetti);
+                    setTimeout(() => confetti.remove(), 5000);
+                }, i * 20);
+            }
+            
+            // Ocultar pantalla de inicio
+            introScreen.classList.add('hidden');
+            
+            // Mostrar contenido principal después de la transición
+            setTimeout(() => {
+                mainContent.classList.add('visible');
+            }, 400);
+        });
+
+        // Navegación de la línea de tiempo
+        let currentIndex = 0;
+        const cardWidth = 350;
+        const timeline = document.getElementById('timeline');
+        const prevBtn = document.getElementById('prevBtn');
+        const nextBtn = document.getElementById('nextBtn');
+        const maxIndex = 3;
+
+        function updateButtons() {
+            prevBtn.classList.toggle('disabled', currentIndex === 0);
+            nextBtn.classList.toggle('disabled', currentIndex === maxIndex);
+        }
+
+        function navigate(direction) {
+            // No hacer nada en móviles
+            if (window.innerWidth <= 768) return;
+            
+            currentIndex += direction;
+            
+            if (currentIndex < 0) currentIndex = 0;
+            if (currentIndex > maxIndex) currentIndex = maxIndex;
+            
+            timeline.style.transform = `translateX(-${currentIndex * cardWidth}px)`;
+            updateButtons();
+        }
+
+        updateButtons();
+
+        // Navegación con teclado (solo en desktop)
+        document.addEventListener('keydown', (e) => {
+            if (window.innerWidth > 768) {
+                if (e.key === 'ArrowLeft') navigate(-1);
+                if (e.key === 'ArrowRight') navigate(1);
+            }
+        });
+
+                // ========== FUEGOS ARTIFICIALES (siempre en la intro; se apaga solo tras clic) ==========
+        (function initFireworks(){
+            const canvas = document.getElementById('fireworksCanvas');
+            if(!canvas) return;
+            const ctx = canvas.getContext('2d');
+            let W, H, rafId = null;
+
+            // Cambios clave: quitamos temporizador y usamos 'spawning' controlado por clic
+            let spawning = true; // seguirá lanzando cohetes hasta que se haga clic en el botón
+
+            const DPR = Math.max(1, Math.min(2, window.devicePixelRatio || 1));
+            function resize(){
+                W = canvas.clientWidth = window.innerWidth;
+                H = canvas.clientHeight = window.innerHeight;
+                canvas.width = W * DPR;
+                canvas.height = H * DPR;
+                ctx.setTransform(DPR, 0, 0, DPR, 0, 0);
+            }
+            resize();
+            window.addEventListener('resize', resize);
+
+            const gravity = 0.12;
+            const friction = 0.98;
+            const rockets = [];
+            const particles = [];
+
+            function rand(min, max){ return Math.random() * (max - min) + min; }
+
+            function spawnRocket(){
+                rockets.push({
+                    x: rand(W*0.2, W*0.8),
+                    y: H + 10,
+                    vx: rand(-1.2, 1.2),
+                    vy: rand(-7.5, -10.5),
+                    color: `hsl(${Math.floor(rand(0,360))},90%,60%)`,
+                    explodeY: rand(H*0.25, H*0.55),
+                });
+            }
+
+            function explode(x, y, baseHue){
+                const count = 80;
+                for(let i=0;i<count;i++){
+                    const angle = (Math.PI*2) * (i/count) + rand(-0.1,0.1);
+                    const speed = rand(2.2, 5.2);
+                    particles.push({
+                        x, y,
+                        vx: Math.cos(angle)*speed,
+                        vy: Math.sin(angle)*speed,
+                        life: rand(50, 90),
+                        age: 0,
+                        color: `hsl(${(baseHue+rand(-20,20)+360)%360},100%,${rand(55,70)}%)`,
+                        size: rand(1.2, 2.2),
+                        sparkle: Math.random()<0.25
+                    });
+                }
+            }
+
+            function step(){
+                ctx.clearRect(0,0,W,H);
+
+                // rockets
+                for(let i=rockets.length-1;i>=0;i--){
+                    const r = rockets[i];
+                    r.x += r.vx;
+                    r.y += r.vy;
+                    r.vy += gravity*0.35;
+
+                    // trail
+                    ctx.beginPath();
+                    ctx.arc(r.x, r.y, 2.2, 0, Math.PI*2);
+                    ctx.fillStyle = r.color;
+                    ctx.fill();
+
+                    if(r.y <= r.explodeY || r.vy >= 0){
+                        const hue = parseInt(r.color.match(/\d+/)[0],10);
+                        explode(r.x, r.y, hue);
+                        rockets.splice(i,1);
+                    }
+                }
+
+                // particles
+                for(let i=particles.length-1;i>=0;i--){
+                    const p = particles[i];
+                    p.x += p.vx;
+                    p.y += p.vy;
+                    p.vx *= friction;
+                    p.vy = p.vy*friction + gravity;
+
+                    p.age++;
+                    const alpha = Math.max(0, 1 - p.age/p.life);
+
+                    if(p.sparkle && Math.random() < 0.1){
+                        ctx.globalCompositeOperation = 'lighter';
+                        ctx.beginPath();
+                        ctx.arc(p.x, p.y, p.size*1.8, 0, Math.PI*2);
+                        ctx.fillStyle = 'rgba(255,255,255,0.8)';
+                        ctx.fill();
+                        ctx.globalCompositeOperation = 'source-over';
+                    }
+
+                    ctx.beginPath();
+                    ctx.arc(p.x, p.y, p.size, 0, Math.PI*2);
+                    ctx.fillStyle = p.color.replace(')', `, ${alpha})`).replace('hsl','hsla');
+                    ctx.fill();
+
+                    if(p.age >= p.life) particles.splice(i,1);
+                }
+
+                // generar cohetes continuamente mientras 'spawning' sea true
+                if(spawning && Math.random() < 0.15) spawnRocket();
+
+                // si ya se hizo clic (spawning=false), esperamos a que no quede nada y cerramos
+                if(!spawning && rockets.length===0 && particles.length===0){
+                    cancelAnimationFrame(rafId);
+                    rafId = null;
+                    canvas.style.opacity = '0';
+                    setTimeout(()=>{ canvas.remove(); }, 400);
+                    return;
+                }
+
+                rafId = requestAnimationFrame(step);
+            }
+
+            // Inicia inmediatamente (sin límite de tiempo)
+            if(!rafId) rafId = requestAnimationFrame(step);
+
+            // Al hacer clic en el botón, detenemos el spawn y dejamos que se disipe
+            document.getElementById('startButton').addEventListener('click', ()=>{
+                spawning = false;
+            });
+        })();
+        // ================== FIN FUEGOS ARTIFICIALES ==================
+
+    </script>
+</body>
+
+</html>
